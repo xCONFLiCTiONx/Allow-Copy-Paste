@@ -1,0 +1,14 @@
+# Allow Copy Paste
+
+Chrome Extension
+
+
+
+Restores copy, paste, text selection, and right-click on websites that disable them.
+
+
+
+Browser freedom
+
+Restores fundamental browser interactions—such as right-click, text selection, and context menus—on websites that attempt to block them via JavaScript.
+
