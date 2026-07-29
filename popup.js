@@ -1,7 +1,12 @@
 const toggleBtn = document.getElementById('toggle-btn');
 const refreshBtn = document.getElementById('refresh-btn');
+const testBtn = document.getElementById('test-btn');
 const domainTitle = document.getElementById('domain-title');
 const refreshNotice = document.getElementById('refresh-notice');
+
+testBtn.onclick = () => {
+    chrome.tabs.create({ url: 'https://xconflictionx.cc/test-right-click' });
+};
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
