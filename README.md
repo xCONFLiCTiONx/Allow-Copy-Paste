@@ -12,3 +12,7 @@ Browser freedom
 
 Restores fundamental browser interactions—such as right-click, text selection, and context menus—on websites that attempt to block them via JavaScript.
 
+
+
+Test the extension or any similar extension here: https://xconflictionx.cc/test-right-click
+
