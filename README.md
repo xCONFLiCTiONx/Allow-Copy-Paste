@@ -27,11 +27,3 @@ Restore fundamental browser interactions on websites that attempt to block them 
 2. Click the extension icon in your toolbar.
 3. Toggle the switches to enable Copy/Paste or Right-Click functionality.
 4. The page will be "fixed" instantly or upon reload.
-
-## 🧪 Testing
-
-You can test the functionality of this extension on our dedicated testing page:
-[https://xconflictionx.cc/test-right-click](https://xconflictionx.cc/test-right-click)
-
----
-*Unlocking the web, one click at a time.*
