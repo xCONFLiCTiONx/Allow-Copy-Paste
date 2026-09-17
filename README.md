@@ -1,3 +1,5 @@
+<img src="icons/icon128.png" width="64" align="left" style="margin-right: 20px; border-radius: 10px;">
+
 # Allow Copy Paste
 
 Restore fundamental browser interactions on websites that attempt to block them via JavaScript.
