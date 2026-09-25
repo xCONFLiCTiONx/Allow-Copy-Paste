@@ -1,120 +1,83 @@
-const toggleBtn = document.getElementById('toggle-btn');
-const refreshBtn = document.getElementById('refresh-btn');
-const domainTitle = document.getElementById('domain-title');
-const refreshNotice = document.getElementById('refresh-notice');
+const toggleBtn = document.getElementById("toggle-btn");
+const refreshBtn = document.getElementById("refresh-btn");
+const domainTitle = document.getElementById("domain-title");
+const refreshNotice = document.getElementById("refresh-notice");
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  const tab = tabs[0];
 
-    const tab = tabs[0];
+  if (!tab || !tab.url || !tab.url.startsWith("http")) {
+    domainTitle.textContent = "Unavailable";
+    toggleBtn.disabled = true;
+    refreshBtn.disabled = true;
+    return;
+  }
 
-    if (!tab || !tab.url || !tab.url.startsWith('http')) {
-        domainTitle.textContent = "Unavailable";
-        toggleBtn.disabled = true;
-        refreshBtn.disabled = true;
-        return;
-    }
+  try {
+    const url = new URL(tab.url);
+    const hostname = url.hostname;
 
-    try {
+    domainTitle.textContent = hostname;
 
-        const url = new URL(tab.url);
-        const hostname = url.hostname;
+    chrome.storage.local.get(["EnabledSites"], (result) => {
+      const enabledSites = result.EnabledSites || [];
 
-        domainTitle.textContent = hostname;
+      const isEnabled = enabledSites.includes(hostname);
 
+      updateButtonState(isEnabled);
 
-        chrome.storage.local.get(['EnabledSites'], (result) => {
+      toggleBtn.onclick = () => {
+        chrome.storage.local.get(["EnabledSites"], (res) => {
+          let sites = res.EnabledSites || [];
 
-            const enabledSites = result.EnabledSites || [];
+          const currentlyEnabled = sites.includes(hostname);
 
-            const isEnabled = enabledSites.includes(hostname);
+          if (currentlyEnabled) {
+            // Disable site
+            sites = sites.filter((h) => h !== hostname);
+          } else {
+            // Enable site
+            sites.push(hostname);
+          }
 
-            updateButtonState(isEnabled);
+          chrome.storage.local.set({ EnabledSites: sites }, () => {
+            updateButtonState(!currentlyEnabled);
 
+            refreshNotice.style.display = "block";
 
-            toggleBtn.onclick = () => {
-
-                chrome.storage.local.get(['EnabledSites'], (res) => {
-
-                    let sites = res.EnabledSites || [];
-
-                    const currentlyEnabled = sites.includes(hostname);
-
-
-                    if (currentlyEnabled) {
-
-                        // Disable site
-                        sites = sites.filter(h => h !== hostname);
-
-                    } else {
-
-                        // Enable site
-                        sites.push(hostname);
-
-                    }
-
-
-                    chrome.storage.local.set(
-                        { EnabledSites: sites },
-                        () => {
-
-                            updateButtonState(!currentlyEnabled);
-
-                            refreshNotice.style.display = "block";
-
-
-                            chrome.tabs.sendMessage(
-                                tab.id,
-                                { action: "updateState" },
-                                () => {
-
-                                    if (chrome.runtime.lastError) {}
-
-                                }
-                            );
-
-                        }
-                    );
-
-                });
-
-            };
-
-
-            refreshBtn.onclick = () => {
-
-                chrome.tabs.reload(tab.id, () => {
-                    window.close();
-                });
-
-            };
-
-
+            chrome.tabs.sendMessage(tab.id, { action: "updateState" }, () => {
+              if (chrome.runtime.lastError) {
+              }
+            });
+          });
         });
+      };
 
-
-    } catch (e) {
-
-        domainTitle.textContent = "Invalid URL";
-        toggleBtn.disabled = true;
-        refreshBtn.disabled = true;
-
-    }
-
+      refreshBtn.onclick = () => {
+        chrome.tabs.reload(tab.id, () => {
+          window.close();
+        });
+      };
+    });
+  } catch (e) {
+    domainTitle.textContent = "Invalid URL";
+    toggleBtn.disabled = true;
+    refreshBtn.disabled = true;
+  }
 });
 
-
 function updateButtonState(isActive) {
-
-    if (isActive) {
-
-        toggleBtn.textContent = "Disable for Site";
-        toggleBtn.className = "enabled";
-
-    } else {
-
-        toggleBtn.textContent = "Enable for Site";
-        toggleBtn.className = "disabled";
-
-    }
-
+  if (isActive) {
+    toggleBtn.textContent = "Disable for Site";
+    toggleBtn.className = "enabled";
+  } else {
+    toggleBtn.textContent = "Enable for Site";
+    toggleBtn.className = "disabled";
+  }
 }
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === "updateIcon") {
+    updateExtensionIcon(request.isDarkMode);
+  }
+});

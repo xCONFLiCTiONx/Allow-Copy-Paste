@@ -1,4 +1,5 @@
 // content.js
+renderIcon();
 
 const hostname = window.location.hostname;
 
