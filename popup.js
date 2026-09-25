@@ -1,7 +1,14 @@
-const toggleBtn = document.getElementById("toggle-btn");
-const refreshBtn = document.getElementById("refresh-btn");
-const domainTitle = document.getElementById("domain-title");
-const refreshNotice = document.getElementById("refresh-notice");
+const toggleBtn = document.getElementById('toggle-btn');
+const refreshBtn = document.getElementById('refresh-btn');
+const testBtn = document.getElementById('test-btn');
+const domainTitle = document.getElementById('domain-title');
+const refreshNotice = document.getElementById('refresh-notice');
+
+if (testBtn) {
+    testBtn.onclick = () => {
+        chrome.tabs.create({ url: 'https://xconflictionx.cc/tools/allow-copy-paste' });
+    };
+}
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const tab = tabs[0];
