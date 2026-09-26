@@ -213,21 +213,22 @@ function enableCopyPaste() {
 
 
 // ===============================
-// Check if this site is enabled
+// Check if this page is enabled
 // ===============================
 
-chrome.storage.local.get(['EnabledSites'], (result) => {
+function checkAndEnable() {
+    const pageUrl = window.location.href.split('#')[0];
 
-    const enabledSites = result.EnabledSites || [];
+    chrome.storage.local.get(['EnabledPages'], (result) => {
+        const enabledPages = result.EnabledPages || [];
 
-    if (enabledSites.includes(hostname)) {
+        if (enabledPages.includes(pageUrl)) {
+            enableCopyPaste();
+        }
+    });
+}
 
-        enableCopyPaste();
-
-    }
-
-});
-
+checkAndEnable();
 
 
 // ===============================
@@ -238,17 +239,7 @@ chrome.runtime.onMessage.addListener((message) => {
 
     if (message.action === "updateState") {
 
-        chrome.storage.local.get(['EnabledSites'], (result) => {
-
-            const enabledSites = result.EnabledSites || [];
-
-            if (enabledSites.includes(hostname)) {
-
-                enableCopyPaste();
-
-            }
-
-        });
+        checkAndEnable();
 
     }
 

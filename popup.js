@@ -22,32 +22,33 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
   try {
     const url = new URL(tab.url);
-    const hostname = url.hostname;
+    const pageUrl = url.href.split('#')[0];
+    const displayTitle = url.href.replace(/^https?:\/\//, '').split('#')[0];
 
-    domainTitle.textContent = hostname;
+    domainTitle.textContent = displayTitle;
 
-    chrome.storage.local.get(["EnabledSites"], (result) => {
-      const enabledSites = result.EnabledSites || [];
+    chrome.storage.local.get(["EnabledPages"], (result) => {
+      const enabledPages = result.EnabledPages || [];
 
-      const isEnabled = enabledSites.includes(hostname);
+      const isEnabled = enabledPages.includes(pageUrl);
 
       updateButtonState(isEnabled);
 
       toggleBtn.onclick = () => {
-        chrome.storage.local.get(["EnabledSites"], (res) => {
-          let sites = res.EnabledSites || [];
+        chrome.storage.local.get(["EnabledPages"], (res) => {
+          let pages = res.EnabledPages || [];
 
-          const currentlyEnabled = sites.includes(hostname);
+          const currentlyEnabled = pages.includes(pageUrl);
 
           if (currentlyEnabled) {
-            // Disable site
-            sites = sites.filter((h) => h !== hostname);
+            // Disable for page
+            pages = pages.filter((p) => p !== pageUrl);
           } else {
-            // Enable site
-            sites.push(hostname);
+            // Enable for page
+            pages.push(pageUrl);
           }
 
-          chrome.storage.local.set({ EnabledSites: sites }, () => {
+          chrome.storage.local.set({ EnabledPages: pages }, () => {
             updateButtonState(!currentlyEnabled);
 
             refreshNotice.style.display = "block";
@@ -75,10 +76,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
 function updateButtonState(isActive) {
   if (isActive) {
-    toggleBtn.textContent = "Disable for Site";
+    toggleBtn.textContent = "Disable for Page";
     toggleBtn.className = "enabled";
   } else {
-    toggleBtn.textContent = "Enable for Site";
+    toggleBtn.textContent = "Enable for Page";
     toggleBtn.className = "disabled";
   }
 }

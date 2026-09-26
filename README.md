@@ -12,7 +12,7 @@ Restore fundamental browser interactions on websites that attempt to block them 
 
 - **Restore Interactions**: Re-enables Right-Click, Copy, Paste, and Text Selection.
 - **Context Menu Recovery**: Bypasses JavaScript-based context menu blocks.
-- **Persistent Rules**: Save sites where you want the extension to remain active.
+- **Persistent Rules**: Save specific pages where you want the extension to remain active.
 - **Lightweight Injector**: Minimal performance overhead with document-start injection.
 - **One-Click Toggle**: Enable or disable the restoration features instantly via the popup.
 
