@@ -82,9 +82,3 @@ function updateButtonState(isActive) {
     toggleBtn.className = "disabled";
   }
 }
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "updateIcon") {
-    updateExtensionIcon(request.isDarkMode);
-  }
-});
